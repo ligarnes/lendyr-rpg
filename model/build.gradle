@@ -1,0 +1,13 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+dependencies {
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+  compileOnly("org.projectlombok:lombok:1.18.38")
+  annotationProcessor("org.projectlombok:lombok:1.18.38")
+
+  testCompileOnly("org.projectlombok:lombok:1.18.38")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
+
+  implementation "net.alteiar.lendyr:lendyr-grpc-api-v1:${lendyrServerVersion}"
+}

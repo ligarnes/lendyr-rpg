@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.game.battlemap.menu;
+package net.alteiar.lendyr.game.battlemap.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,12 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import lombok.Builder;
+import lombok.Getter;
 import net.alteiar.lendyr.game.gui.TextButtonGroup;
 import net.alteiar.lendyr.game.gui.UiFactory;
 import net.alteiar.lendyr.game.gui.Window;
 
 public class ErrorDialog extends ViewLayer {
-  private boolean isVisible;
+  @Getter
+  private boolean visible;
   private final Window background;
   private final Label text;
   public final TextButtonGroup button;
@@ -44,7 +46,7 @@ public class ErrorDialog extends ViewLayer {
     stage.addActor(text);
     stage.addActor(button);
 
-    this.isVisible = true;
+    this.visible = true;
   }
 
   public void addButtonListener(EventListener eventListener) {
@@ -52,11 +54,11 @@ public class ErrorDialog extends ViewLayer {
   }
 
   public void show() {
-    this.isVisible = true;
+    this.visible = true;
   }
 
   public void hide() {
-    this.isVisible = false;
+    this.visible = false;
   }
 
   public void setText(String text) {
@@ -65,15 +67,22 @@ public class ErrorDialog extends ViewLayer {
 
   @Override
   public void act(float delta) {
-    if (isVisible) {
+    if (visible) {
       super.act(delta);
     }
   }
 
   @Override
   public void draw() {
-    if (isVisible) {
+    if (visible) {
       super.draw();
     }
+  }
+
+  public void resize(int width, int height) {
+    super.resize(width, height);
+    background.setPosition((Gdx.graphics.getWidth() - background.getWidth()) / 2, (Gdx.graphics.getHeight() - background.getHeight()) / 2);
+    text.setPosition((Gdx.graphics.getWidth() - background.getWidth()) / 2, (Gdx.graphics.getHeight() - background.getHeight()) / 2);
+    button.setPosition(background.getX() + 150 - button.getWidth() / 2, background.getY() + 10);
   }
 }

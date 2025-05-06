@@ -12,18 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import lombok.Builder;
 import lombok.NonNull;
-import net.alteiar.lendyr.game.state.WorldFactory;
-import net.alteiar.lendyr.game.state.WorldState;
+import net.alteiar.lendyr.game.state.GameEngine;
 
 public class LoadingScreen extends ScreenAdapter {
   private final Game game;
   private final AssetManager assetManager;
 
   Stage stage;
-  BitmapFont font;
   Label labelProgress;
 
-  private WorldState worldState;
+  private GameEngine gameEngine;
 
   @Builder
   public LoadingScreen(@NonNull Game game, @NonNull AssetManager assetManager) {
@@ -34,7 +32,6 @@ public class LoadingScreen extends ScreenAdapter {
   @Override
   public void dispose() {
     stage.dispose();
-    font.dispose();
   }
 
   @Override
@@ -97,7 +94,10 @@ public class LoadingScreen extends ScreenAdapter {
     assetManager.load("black-crusader-ui/BlackCrusaderUI_el_44.png", Texture.class);
     assetManager.load("black-crusader-ui/BlackCrusaderUI_el_45.png", Texture.class);
     assetManager.load("black-crusader-ui/BlackCrusaderUI_el_46.png", Texture.class);
+
     assetManager.load("icon/TabletopBadges_15.PNG", Texture.class);
+    assetManager.load("icon/TabletopBadges_47.PNG", Texture.class);
+    assetManager.load("icon/TabletopBadges_47_overlay.png", Texture.class);
 
     assetManager.load("blank.png", Texture.class);
 
@@ -107,12 +107,22 @@ public class LoadingScreen extends ScreenAdapter {
 
     assetManager.load("token/ulfrik-token.png", Texture.class);
     assetManager.load("token/cyrilla-token.png", Texture.class);
+    assetManager.load("token/izydor-token.png", Texture.class);
 
-    worldState = WorldFactory.createSimpleWorld();
+    assetManager.load("portrait/ulfrik-portrait.jpeg", Texture.class);
+    assetManager.load("portrait/cyrilla-portrait.jpeg", Texture.class);
+    assetManager.load("portrait/izydor-portrait.jpeg", Texture.class);
+    assetManager.load("portrait/overlay-green.png", Texture.class);
+    assetManager.load("portrait/overlay-red.png", Texture.class);
+    assetManager.load("portrait/overlay-neutral.png", Texture.class);
+
+    assetManager.load("encounter/move-overlay.png", Texture.class);
+    assetManager.load("encounter/move-overlay-ok.png", Texture.class);
+    assetManager.load("encounter/move-overlay-nok.png", Texture.class);
 
     stage = new Stage();
 
-    font = assetManager.finishLoadingAsset("black-crusader-ui/roboto.fnt");
+    BitmapFont font = assetManager.finishLoadingAsset("black-crusader-ui/roboto.fnt");
 
     labelProgress = new Label("TEXT", new Label.LabelStyle(font, Color.WHITE));
 
@@ -123,12 +133,16 @@ public class LoadingScreen extends ScreenAdapter {
     table.add(labelProgress);
 
     stage.addActor(table);
+
+    gameEngine = GameEngine.builder().host("localhost").port(50051).build();
+    gameEngine.load();
   }
 
   @Override
   public void render(float delta) {
-    if (assetManager.update()) {
-      game.setScreen(BattlemapScreen.builder().assetManager(assetManager).worldState(worldState).build());
+    assetManager.update();
+    if (assetManager.isFinished() && gameEngine.isLoaded()) {
+      game.setScreen(BattlemapScreen.builder().game(game).assetManager(assetManager).gameEngine(gameEngine).build());
     }
 
     ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);

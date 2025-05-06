@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.game.battlemap.menu;
+package net.alteiar.lendyr.game.battlemap.view;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,7 +19,7 @@ import net.alteiar.lendyr.game.battlemap.BattleMapContext;
 import net.alteiar.lendyr.game.battlemap.CursorInfo;
 import net.alteiar.lendyr.game.battlemap.actor.SquaredGrid;
 import net.alteiar.lendyr.game.battlemap.actor.TokenCharacter;
-import net.alteiar.lendyr.game.battlemap.actor.move.MoveGroup;
+import net.alteiar.lendyr.game.battlemap.actor.move.PathActor;
 import net.alteiar.lendyr.game.gui.UiFactory;
 import net.alteiar.lendyr.game.state.BattleMapUiState;
 
@@ -31,7 +31,7 @@ public class MapView extends ViewLayer {
 
   private Sprite mapSprite;
   private SquaredGrid squaredGrid;
-  private MoveGroup moveGroup;
+  private PathActor moveGroup;
 
   @Getter
   private OrthographicCamera camera;
@@ -54,8 +54,8 @@ public class MapView extends ViewLayer {
 
     this.battleMapContext = battleMapContext;
 
-    battleMapContext.getWorldState().getCharacterEntities().forEach(state -> {
-      TokenCharacter character = TokenCharacter.builder().characterEntity(state).assetManager(uiFactory.getAssetManager()).build();
+    battleMapContext.getCombatEntity().getInitiativeOrder().forEach(state -> {
+      TokenCharacter character = TokenCharacter.builder().characterEntity(state).uiFactory(uiFactory).build();
       character.addListener(new ClickListener() {
         @Override
         public void clicked(InputEvent event, float x, float y) {
@@ -69,7 +69,7 @@ public class MapView extends ViewLayer {
 
         @Override
         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-
+          mapListener.onCharacterExit(character);
         }
       });
       stage.addActor(character);
@@ -80,7 +80,7 @@ public class MapView extends ViewLayer {
     mapSprite.setSize(Constants.WORLD_WIDTH, Constants.WORLD_HEIGHT);
 
     // Movement
-    moveGroup = MoveGroup.builder().uiFactory(uiFactory).cursorInfo(cursorInfo).build();
+    moveGroup = PathActor.builder().uiFactory(uiFactory).cursorInfo(cursorInfo).build();
     stage.addActor(moveGroup);
 
     squaredGrid = new SquaredGrid();
@@ -100,7 +100,7 @@ public class MapView extends ViewLayer {
 
     moveGroup.setVisible(this.battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MOVE);
     if (this.battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MOVE) {
-      moveGroup.setCharacterEntity(this.battleMapContext.getWorldState().getCurrentCharacter());
+      moveGroup.setCharacterEntity(this.battleMapContext.getCombatEntity().getCurrentCharacter());
     }
 
     squaredGrid.setVisible(this.battleMapContext.getUiState().isGridVisible());

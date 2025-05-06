@@ -9,38 +9,53 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 public class GaugeActor extends Actor {
-
+  private final UiFactory uiFactory;
   private final Texture background;
+  private Texture inner;
   private final Texture border;
   private final ShapeRenderer shapeRenderer;
 
   @Getter
   @Setter
   private Color color;
-  private float currentRatio;
+  @Getter
+  @Setter
+  private float ratio;
 
   @Builder
-  private GaugeActor(UiFactory uiFactory, float ratio, Color color) {
+  private GaugeActor(@NonNull UiFactory uiFactory, float ratio, @NonNull Color color, String innerTexture) {
+    this.uiFactory = uiFactory;
+
     border = uiFactory.getTexture("black-crusader-ui/BlackCrusaderUI_el_38.png");
+
     background = uiFactory.getTexture("black-crusader-ui/BlackCrusaderUI_el_39.png");
+    if (innerTexture != null) {
+      this.inner = uiFactory.getTexture(innerTexture);
+    } else {
+      inner = null;
+    }
     setWidth(120f);
     setHeight(120f);
     this.shapeRenderer = new ShapeRenderer();
     this.shapeRenderer.setAutoShapeType(true);
-    this.currentRatio = ratio;
+    this.ratio = ratio;
     this.color = color;
   }
 
-  public void setRatio(float ratio) {
-    this.currentRatio = ratio;
+  public void setInnerTexture(String innerTexture) {
+    this.inner = uiFactory.getTexture(innerTexture);
   }
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
     batch.draw(background, getX(), getY(), getWidth(), getHeight());
+    if (inner != null) {
+      batch.draw(inner, getX(), getY(), getWidth(), getHeight());
+    }
     batch.end();
 
     // Draw blood level
@@ -73,7 +88,7 @@ public class GaugeActor extends Actor {
 
     /* Render mask elements. */
     shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-    shapeRenderer.rect(getX(), getY(), getWidth(), getHeight() * currentRatio);
+    shapeRenderer.rect(getX(), getY(), getWidth(), getHeight() * ratio);
     shapeRenderer.flush();
   }
 
@@ -84,9 +99,11 @@ public class GaugeActor extends Actor {
 
     /* Set the depth function to EQUAL. */
     Gdx.gl.glDepthFunc(GL20.GL_EQUAL);
-
+    Gdx.gl.glEnable(GL20.GL_BLEND);
+    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    
     /* Render masked elements. */
-    shapeRenderer.setColor(color);
+    shapeRenderer.setColor(UiFactory.HEALTH_COLOR);
     shapeRenderer.circle(getX() + getWidth() / 2, getY() + getHeight() / 2, (getWidth() / 2) - 1);
     shapeRenderer.flush();
   }

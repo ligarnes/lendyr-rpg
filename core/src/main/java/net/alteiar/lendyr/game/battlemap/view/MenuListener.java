@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.game.battlemap.menu;
+package net.alteiar.lendyr.game.battlemap.view;
 
 public interface MenuListener {
   void onMoveClick();

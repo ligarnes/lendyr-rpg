@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.game.battlemap.menu;
+package net.alteiar.lendyr.game.battlemap.view;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Stage;

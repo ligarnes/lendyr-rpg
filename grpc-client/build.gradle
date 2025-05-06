@@ -1,0 +1,20 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+dependencies {
+  implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+  implementation "io.grpc:grpc-stub:${grpcVersion}"
+  compileOnly "org.apache.tomcat:annotations-api:6.0.53"
+  runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+
+  implementation "net.alteiar.lendyr:lendyr-grpc-api-v1:${lendyrServerVersion}"
+
+  implementation project(":model")
+
+  compileOnly("org.projectlombok:lombok:1.18.38")
+  annotationProcessor("org.projectlombok:lombok:1.18.38")
+
+  testCompileOnly("org.projectlombok:lombok:1.18.38")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
+}
+
+//

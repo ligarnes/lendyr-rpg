@@ -9,17 +9,16 @@ import net.alteiar.lendyr.game.screen.LoadingScreen;
  */
 public class LendyrGame extends Game {
 
-    AssetManager assetManager;
+  AssetManager assetManager;
 
-    @Override
-    public void create() {
-        assetManager = new AssetManager();
-        setScreen(LoadingScreen.builder().assetManager(assetManager).game(this).build());
-    }
+  @Override
+  public void create() {
+    assetManager = new AssetManager();
+    setScreen(LoadingScreen.builder().assetManager(assetManager).game(this).build());
+  }
 
-
-    @Override
-    public void dispose() {
-        assetManager.dispose();
-    }
+  @Override
+  public void dispose() {
+    assetManager.dispose();
+  }
 }

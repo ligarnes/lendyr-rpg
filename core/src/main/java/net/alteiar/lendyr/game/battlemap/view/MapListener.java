@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.game.battlemap.menu;
+package net.alteiar.lendyr.game.battlemap.view;
 
 import com.badlogic.gdx.math.Vector3;
 import net.alteiar.lendyr.game.battlemap.actor.TokenCharacter;

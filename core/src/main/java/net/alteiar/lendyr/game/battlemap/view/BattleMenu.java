@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.game.battlemap.menu;
+package net.alteiar.lendyr.game.battlemap.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -10,12 +10,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Setter;
+import net.alteiar.lendyr.entity.CharacterEntity;
 import net.alteiar.lendyr.game.battlemap.BattleMapContext;
 import net.alteiar.lendyr.game.gui.*;
 import net.alteiar.lendyr.game.state.BattleMapUiState;
-import net.alteiar.lendyr.game.state.model.CharacterEntity;
-
-import java.util.Objects;
 
 public class BattleMenu extends ViewLayer {
   private final VerticalGroup layout;
@@ -113,15 +111,13 @@ public class BattleMenu extends ViewLayer {
   }
 
   public void act(float delta) {
-    CharacterEntity character = battleMapContext.getWorldState().getCurrentCharacter();
-    if (!Objects.equals(currentCharacter, character)) {
-      this.currentCharacter = character;
-      healthGauge.setCurrent(this.currentCharacter.getCurrentHp());
-      healthGauge.setMax(this.currentCharacter.getMaxHp());
-    }
+    this.currentCharacter = battleMapContext.getCombatEntity().getCurrentCharacter();
+    healthGauge.setCurrent(this.currentCharacter.getCurrentHp());
+    healthGauge.setMax(this.currentCharacter.getMaxHp());
+    healthGauge.setInnerTexture(this.currentCharacter.getToken());
 
-    characterActionCounter.setProgress(battleMapContext.getGameEngine().getRemainingAction());
-    characterActionCounter.setMaxProgress(battleMapContext.getGameEngine().getTotalAction());
+    characterActionCounter.setProgress(2);
+    characterActionCounter.setMaxProgress(2);
 
     stage.act(delta);
   }

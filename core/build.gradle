@@ -12,6 +12,10 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
 
+  implementation project(":model")
+  implementation project(":grpc-client")
+  implementation "net.alteiar.lendyr:lendyr-grpc-api-v1:${lendyrServerVersion}"
+
   compileOnly("org.projectlombok:lombok:1.18.38")
   annotationProcessor("org.projectlombok:lombok:1.18.38")
 

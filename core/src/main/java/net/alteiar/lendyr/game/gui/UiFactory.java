@@ -11,12 +11,13 @@ import lombok.NonNull;
 
 public class UiFactory {
 
+  public static final Color HEALTH_COLOR = new Color(0.651f, 0.122f, 0.086f, 0.5f);
+
   @Getter
-  @NonNull
   private final AssetManager assetManager;
 
   @Builder
-  public UiFactory(AssetManager assetManager) {
+  public UiFactory(@NonNull AssetManager assetManager) {
     this.assetManager = assetManager;
   }
 
