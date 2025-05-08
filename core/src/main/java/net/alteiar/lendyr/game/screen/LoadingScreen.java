@@ -100,8 +100,8 @@ public class LoadingScreen extends ScreenAdapter {
     assetManager.load("icon/TabletopBadges_47_overlay.png", Texture.class);
 
     assetManager.load("blank.png", Texture.class);
+    assetManager.load("black.png", Texture.class);
 
-    assetManager.load("assets/soldier-orcs/Characters/Soldier/Soldier/Soldier.png", Texture.class);
     assetManager.load("maps/map.jpg", Texture.class);
 
 
@@ -119,6 +119,18 @@ public class LoadingScreen extends ScreenAdapter {
     assetManager.load("encounter/move-overlay.png", Texture.class);
     assetManager.load("encounter/move-overlay-ok.png", Texture.class);
     assetManager.load("encounter/move-overlay-nok.png", Texture.class);
+    assetManager.load("encounter/shield.png", Texture.class);
+    assetManager.load("encounter/hurt.png", Texture.class);
+
+    assetManager.load("encounter/cursor/walk.png", Texture.class);
+    assetManager.load("encounter/cursor/attack.png", Texture.class);
+
+    assetManager.load("encounter/dice/dice-six-faces-one.png", Texture.class);
+    assetManager.load("encounter/dice/dice-six-faces-two.png", Texture.class);
+    assetManager.load("encounter/dice/dice-six-faces-three.png", Texture.class);
+    assetManager.load("encounter/dice/dice-six-faces-four.png", Texture.class);
+    assetManager.load("encounter/dice/dice-six-faces-five.png", Texture.class);
+    assetManager.load("encounter/dice/dice-six-faces-six.png", Texture.class);
 
     stage = new Stage();
 

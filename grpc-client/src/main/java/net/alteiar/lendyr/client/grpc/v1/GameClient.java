@@ -5,11 +5,16 @@ import io.grpc.Channel;
 import io.grpc.stub.StreamObserver;
 import lombok.Builder;
 import net.alteiar.lendyr.entity.CombatEntity;
+import net.alteiar.lendyr.entity.mapper.AttackMapper;
 import net.alteiar.lendyr.entity.mapper.GenericMapper;
+import net.alteiar.lendyr.entity.model.AttackResult;
 import net.alteiar.lendyr.grpc.model.v1.EmptyResponse;
 import net.alteiar.lendyr.grpc.model.v1.LendyrGameServiceGrpc;
 import net.alteiar.lendyr.grpc.model.v1.LendyrGameState;
-import net.alteiar.lendyr.grpc.model.v1.combat.*;
+import net.alteiar.lendyr.grpc.model.v1.combat.LendyrAction;
+import net.alteiar.lendyr.grpc.model.v1.combat.LendyrActionResult;
+import net.alteiar.lendyr.grpc.model.v1.combat.LendyrAttackAction;
+import net.alteiar.lendyr.grpc.model.v1.combat.LendyrMoveAction;
 
 import java.time.Duration;
 import java.util.List;
@@ -56,7 +61,7 @@ public class GameClient {
     return act(request);
   }
 
-  public LendyrAttackActionResult attack(UUID sourceId, UUID targetId) {
+  public AttackResult attack(UUID sourceId, UUID targetId) {
     LendyrAttackAction attack = LendyrAttackAction.newBuilder()
       .setSourceId(GenericMapper.INSTANCE.convertUUIDToBytes(sourceId))
       .setTargetId(GenericMapper.INSTANCE.convertUUIDToBytes(targetId))
@@ -67,7 +72,7 @@ public class GameClient {
     if (result.hasError()) {
       throw new RuntimeException(result.getError().getDescription());
     }
-    return result.getAttack();
+    return AttackMapper.INSTANCE.convertToBusiness(sourceId, targetId, result.getAttack());
   }
 
   private LendyrActionResult act(LendyrAction action) {

@@ -23,7 +23,6 @@ public class BattleMenu extends ViewLayer {
   private final Window leftMenuBackground;
 
   private final BattleMapContext battleMapContext;
-  private CharacterEntity currentCharacter;
 
   @Setter
   private MenuListener menuListener;
@@ -111,10 +110,10 @@ public class BattleMenu extends ViewLayer {
   }
 
   public void act(float delta) {
-    this.currentCharacter = battleMapContext.getCombatEntity().getCurrentCharacter();
-    healthGauge.setCurrent(this.currentCharacter.getCurrentHp());
-    healthGauge.setMax(this.currentCharacter.getMaxHp());
-    healthGauge.setInnerTexture(this.currentCharacter.getToken());
+    CharacterEntity currentCharacter = battleMapContext.getCombatEntity().getCurrentCharacter();
+    healthGauge.setCurrent(currentCharacter.getCurrentHp());
+    healthGauge.setMax(currentCharacter.getMaxHp());
+    healthGauge.setInnerTexture(currentCharacter.getToken());
 
     characterActionCounter.setProgress(2);
     characterActionCounter.setMaxProgress(2);

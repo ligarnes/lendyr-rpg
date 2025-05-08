@@ -12,4 +12,6 @@ public interface MapListener {
   void onCharacterExit(TokenCharacter character);
 
   boolean onMapClick(Vector3 mapPosition);
+
+  void onEscapeTyped();
 }

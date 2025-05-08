@@ -4,26 +4,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import lombok.Builder;
 import lombok.NonNull;
+import net.alteiar.lendyr.game.battlemap.AttackLayer;
 import net.alteiar.lendyr.game.battlemap.BattleMapContext;
-import net.alteiar.lendyr.game.battlemap.actor.InitiativeTracker;
+import net.alteiar.lendyr.game.battlemap.InitiativeTrackerLayer;
 import net.alteiar.lendyr.game.gui.UiFactory;
 
 public class MapOverlay extends ViewLayer {
-  public static final int TRACKER_TOP_SPACING = InitiativeTracker.PORTRAIT_HEIGHT + 10;
 
-  private final InitiativeTracker initiativeTracker;
-  private final int trackerWidth;
+  private final InitiativeTrackerLayer initiativeTracker;
+  private final AttackLayer attackLayer;
 
   @Builder
   public MapOverlay(@NonNull UiFactory uiFactory, @NonNull BattleMapContext battleMapContext) {
     super(new ScreenViewport());
 
-    trackerWidth = (InitiativeTracker.PORTRAIT_WIDTH + InitiativeTracker.SPACING) * battleMapContext.getCombatEntity().getInitiativeOrder().size();
+    initiativeTracker = InitiativeTrackerLayer.builder().battleMapContext(battleMapContext).uiFactory(uiFactory).build();
+    attackLayer = AttackLayer.builder().uiFactory(uiFactory).battleMapContext(battleMapContext).build();
 
-    initiativeTracker = InitiativeTracker.builder().battleMapContext(battleMapContext).uiFactory(uiFactory).build();
-    initiativeTracker.setPosition(Gdx.graphics.getWidth() / 2f - trackerWidth, Gdx.graphics.getHeight() - TRACKER_TOP_SPACING);
+    attackLayer.setX(Gdx.graphics.getWidth() / 2f - attackLayer.getWidth() / 2f);
+    attackLayer.setY(Gdx.graphics.getHeight() / 2f + attackLayer.getHeight());
 
     stage.addActor(initiativeTracker);
+    stage.addActor(attackLayer);
   }
 
   @Override
@@ -33,7 +35,11 @@ public class MapOverlay extends ViewLayer {
 
   @Override
   public void resize(int width, int height) {
-    super.resize(width, height);
-    initiativeTracker.setPosition(width / 2f - trackerWidth, height - TRACKER_TOP_SPACING);
+    stage.getViewport().update(width, height, true);
+
+    attackLayer.setX(Gdx.graphics.getWidth() / 2f - attackLayer.getWidth() / 2f);
+    attackLayer.setY(Gdx.graphics.getHeight() / 2f - attackLayer.getHeight() / 2f);
+
+    initiativeTracker.resize(width, height);
   }
 }

@@ -10,7 +10,6 @@ import net.alteiar.lendyr.entity.CharacterEntity;
 import net.alteiar.lendyr.game.Constants;
 import net.alteiar.lendyr.game.battlemap.BattleMapContext;
 import net.alteiar.lendyr.game.battlemap.actor.TokenCharacter;
-import net.alteiar.lendyr.game.battlemap.actor.action.DamageAction;
 import net.alteiar.lendyr.game.battlemap.view.ErrorDialog;
 import net.alteiar.lendyr.game.battlemap.view.MapListener;
 import net.alteiar.lendyr.game.state.BattleMapUiState;
@@ -33,6 +32,7 @@ public class MapListenerImpl implements MapListener {
       return false;
     }
 
+    Vector2 vector = vector2Pool.obtain();
     try {
       CharacterEntity character = battleMapContext.getCombatEntity().getCurrentCharacter();
 
@@ -42,14 +42,21 @@ public class MapListenerImpl implements MapListener {
       float yPosRounded = Math.round(newYpos * 4f) / 4f;
       float xCentered = Math.max(0, Math.min(Constants.WORLD_WIDTH - character.getWidth(), xPosRounded));
       float yCentered = Math.max(0, Math.min(Constants.WORLD_HEIGHT - character.getHeight(), yPosRounded));
-      Vector2 vector = vector2Pool.obtain();
+
       battleMapContext.getGameEngine().move(character, vector.set(xCentered, yCentered));
-      vector2Pool.free(vector);
+      battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
     } catch (RuntimeException e) {
       errorDialog.setText(e.getMessage());
       errorDialog.show();
+    } finally {
+      vector2Pool.free(vector);
     }
     return true;
+  }
+
+  @Override
+  public void onEscapeTyped() {
+    battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
   }
 
   @Override
@@ -57,10 +64,8 @@ public class MapListenerImpl implements MapListener {
     if (BattleMapUiState.Action.ATTACK.equals(battleMapContext.getUiState().getCurrentAction())) {
       try {
         character.setTargeted(false);
-        int damage = battleMapContext.getGameEngine().attack(battleMapContext.getCombatEntity().getCurrentCharacter(), character.getCharacterEntity());
-        if (damage > 0) {
-          character.addAction(DamageAction.builder().damage(damage).build());
-        }
+        battleMapContext.getGameEngine().attack(battleMapContext.getCombatEntity().getCurrentCharacter(), character.getCharacterEntity());
+        battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
       } catch (RuntimeException e) {
         errorDialog.setText(e.getMessage());
         errorDialog.show();

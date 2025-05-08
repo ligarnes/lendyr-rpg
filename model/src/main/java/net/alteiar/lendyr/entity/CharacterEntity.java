@@ -17,6 +17,8 @@ public class CharacterEntity {
   private int maxHp;
   private int currentHp;
 
+  private int defense;
+
   private Vector2 position;
   private float width;
   private float height;
@@ -29,5 +31,6 @@ public class CharacterEntity {
     this.width = persona.getSize().getWidth();
     this.height = persona.getSize().getHeight();
     this.speed = persona.getSpeed();
+    this.defense = persona.getArmorRating();
   }
 }

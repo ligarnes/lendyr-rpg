@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.game.battlemap.actor.move;
+package net.alteiar.lendyr.game.battlemap.actor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;

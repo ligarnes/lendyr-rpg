@@ -33,6 +33,10 @@ public class CombatEntity {
     this.loaded = false;
   }
 
+  public CharacterEntity getCharacter(UUID id) {
+    return characterEntities.get(id);
+  }
+
   public CharacterEntity getCurrentCharacter() {
     if (activePersona.getIdx() >= characterEntities.size()) {
       throw new IllegalStateException("No current character found");

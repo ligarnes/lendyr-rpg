@@ -17,9 +17,9 @@ import lombok.Setter;
 import net.alteiar.lendyr.game.Constants;
 import net.alteiar.lendyr.game.battlemap.BattleMapContext;
 import net.alteiar.lendyr.game.battlemap.CursorInfo;
+import net.alteiar.lendyr.game.battlemap.actor.PathActor;
 import net.alteiar.lendyr.game.battlemap.actor.SquaredGrid;
 import net.alteiar.lendyr.game.battlemap.actor.TokenCharacter;
-import net.alteiar.lendyr.game.battlemap.actor.move.PathActor;
 import net.alteiar.lendyr.game.gui.UiFactory;
 import net.alteiar.lendyr.game.state.BattleMapUiState;
 
@@ -27,21 +27,21 @@ import java.util.Objects;
 
 public class MapView extends ViewLayer {
 
-  private BattleMapContext battleMapContext;
+  private final BattleMapContext battleMapContext;
 
-  private Sprite mapSprite;
-  private SquaredGrid squaredGrid;
-  private PathActor moveGroup;
+  private final Sprite mapSprite;
+  private final SquaredGrid squaredGrid;
+  private final PathActor moveGroup;
 
   @Getter
-  private OrthographicCamera camera;
-  private CursorInfo cursorInfo;
+  private final OrthographicCamera camera;
+  private final CursorInfo cursorInfo;
 
   @Setter
   private MapListener mapListener;
 
   // cached object to avoid instantiation.
-  private Vector3 point3d = new Vector3();
+  private final Vector3 point3d = new Vector3();
 
   @Builder
   public MapView(@NonNull UiFactory uiFactory, @NonNull BattleMapContext battleMapContext) {
@@ -49,8 +49,6 @@ public class MapView extends ViewLayer {
 
     camera = (OrthographicCamera) this.stage.getCamera();
     cursorInfo = CursorInfo.builder().camera(camera).build();
-
-    stage.setDebugAll(true);
 
     this.battleMapContext = battleMapContext;
 
@@ -145,6 +143,16 @@ public class MapView extends ViewLayer {
     }
 
     return false;
+  }
+
+  @Override
+  public boolean keyDown(int keycode) {
+    if (Input.Keys.ESCAPE == keycode) {
+      battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
+      return true;
+    }
+
+    return stage.keyDown(keycode);
   }
 
   @Override

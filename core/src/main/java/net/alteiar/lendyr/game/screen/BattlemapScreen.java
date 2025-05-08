@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -19,6 +21,7 @@ import net.alteiar.lendyr.game.state.GameEngine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class BattlemapScreen extends ScreenAdapter {
@@ -88,6 +91,9 @@ public class BattlemapScreen extends ScreenAdapter {
     views.add(menu);
     views.add(errorDialog);
 
+    walkCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("encounter/cursor/walk.png")), 16, 16);
+    attackCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("encounter/cursor/attack.png")), 16, 16);
+
     mapView.setMapListener(MapListenerImpl.builder().battleMapContext(battleMapContext).errorDialog(errorDialog).build());
   }
 
@@ -105,6 +111,12 @@ public class BattlemapScreen extends ScreenAdapter {
     mapOverlay.resize(width, height);
   }
 
+  private BattleMapUiState.Action currentAction;
+
+  private Cursor walkCursor;
+  private Cursor attackCursor;
+
+
   @Override
   public void render(float delta) {
     if (this.battleMapContext.getGameEngine().isGameOver()) {
@@ -115,10 +127,19 @@ public class BattlemapScreen extends ScreenAdapter {
     }
 
     if (!errorDialog.isVisible()) {
-      Optional<NotificationMessage> message = battleMapContext.getGameEngine().getNotificationManager().popNotification();
+      Optional<NotificationMessage> message = battleMapContext.getGameEngine().getEncounterController().popNotification();
       if (message.isPresent()) {
         errorDialog.setText(message.get().getMessage());
         errorDialog.show();
+      }
+    }
+
+    if (!Objects.equals(currentAction, battleMapContext.getUiState().getCurrentAction())) {
+      currentAction = battleMapContext.getUiState().getCurrentAction();
+      switch (currentAction) {
+        case ATTACK -> Gdx.graphics.setCursor(attackCursor);
+        case MOVE -> Gdx.graphics.setCursor(walkCursor);
+        default -> Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
       }
     }
 
