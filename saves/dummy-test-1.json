@@ -1,0 +1,260 @@
+{
+  "personas": [
+    {
+      "id": "b66c4a7e-9f5f-40c7-82d4-f442e5c7fe79",
+      "name": "Ulfrik",
+      "speed": 8,
+      "defense": 10,
+      "portraitPath": "portrait/ulfrik-portrait.jpeg",
+      "tokenPath": "token/ulfrik-token.png",
+      "position": {
+        "x": 20.0,
+        "y": 20.0
+      },
+      "size": {
+        "width": 1.0,
+        "height": 1.0
+      },
+      "armorRating": 2,
+      "armorPenalty": -1,
+      "healthPoint": 40,
+      "currentHealthPoint": 20,
+      "abilities": {
+        "accuracy": {
+          "value": 1,
+          "focuses": [
+            "BRAWLING",
+            "BOWS"
+          ],
+          "primary": false
+        },
+        "communication": {
+          "value": 2,
+          "focuses": null,
+          "primary": false
+        },
+        "constitution": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "dexterity": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "fighting": {
+          "value": 3,
+          "focuses": null,
+          "primary": false
+        },
+        "intelligence": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "perception": {
+          "value": 3,
+          "focuses": null,
+          "primary": false
+        },
+        "strength": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "willpower": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        }
+      },
+      "attack": {
+        "attackType": "RANGE",
+        "range": 5,
+        "attack": "ACCURACY",
+        "attackFocus": "BOWS",
+        "diceCount": 1,
+        "fixedDamage": 3,
+        "damageBonus": "PERCEPTION",
+        "penetrating": false
+      }
+    },
+    {
+      "id": "b66c4a7e-9f5f-40c7-82d4-f442e5c7fe80",
+      "name": "Cyrilla",
+      "speed": 8,
+      "defense": 10,
+      "portraitPath": "portrait/cyrilla-portrait.jpeg",
+      "tokenPath": "token/cyrilla-token.png",
+      "position": {
+        "x": 15.0,
+        "y": 15.0
+      },
+      "size": {
+        "width": 1.0,
+        "height": 1.0
+      },
+      "armorRating": 2,
+      "armorPenalty": -1,
+      "healthPoint": 40,
+      "currentHealthPoint": 36,
+      "abilities": {
+        "accuracy": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "communication": {
+          "value": 2,
+          "focuses": null,
+          "primary": false
+        },
+        "constitution": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "dexterity": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "fighting": {
+          "value": 3,
+          "focuses": null,
+          "primary": false
+        },
+        "intelligence": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "perception": {
+          "value": 0,
+          "focuses": null,
+          "primary": false
+        },
+        "strength": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "willpower": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        }
+      },
+      "attack": {
+        "attackType": "MELEE",
+        "range": 1,
+        "attack": "FIGHTING",
+        "attackFocus": "AXES",
+        "diceCount": 3,
+        "fixedDamage": 2,
+        "damageBonus": "STRENGTH",
+        "penetrating": false
+      }
+    },
+    {
+      "id": "b66c4a7e-9f5f-40c7-82d4-f442e5c7fe81",
+      "name": "Izidor",
+      "speed": 8,
+      "defense": 10,
+      "portraitPath": "portrait/izydor-portrait.jpeg",
+      "tokenPath": "token/izydor-token.png",
+      "position": {
+        "x": 10.0,
+        "y": 10.0
+      },
+      "size": {
+        "width": 1.0,
+        "height": 1.0
+      },
+      "armorRating": 2,
+      "armorPenalty": -1,
+      "healthPoint": 40,
+      "currentHealthPoint": 36,
+      "abilities": {
+        "accuracy": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "communication": {
+          "value": 2,
+          "focuses": null,
+          "primary": false
+        },
+        "constitution": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "dexterity": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "fighting": {
+          "value": 3,
+          "focuses": null,
+          "primary": false
+        },
+        "intelligence": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "perception": {
+          "value": 0,
+          "focuses": null,
+          "primary": false
+        },
+        "strength": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        },
+        "willpower": {
+          "value": 1,
+          "focuses": null,
+          "primary": false
+        }
+      },
+      "attack": {
+        "attackType": "MELEE",
+        "range": 1,
+        "attack": "FIGHTING",
+        "attackFocus": "AXES",
+        "diceCount": 2,
+        "fixedDamage": 1,
+        "damageBonus": "STRENGTH",
+        "penetrating": false
+      }
+    }
+  ],
+  "encounter": {
+    "name": "Les ruines",
+    "map": {
+      "mapPath": "map.jpg",
+      "widthInPixel": 4200,
+      "heightInPixel": 4200,
+      "pixelPerMeter": 100
+    },
+    "currentState": {
+      "turn": 1,
+      "initiative": [
+        "b66c4a7e-9f5f-40c7-82d4-f442e5c7fe79",
+        "b66c4a7e-9f5f-40c7-82d4-f442e5c7fe80",
+        "b66c4a7e-9f5f-40c7-82d4-f442e5c7fe81"
+      ],
+      "currentPersona": {
+        "initiativeIdx": 0,
+        "majorActionUsed": false,
+        "minorActionUsed": false
+      }
+    }
+  }
+}

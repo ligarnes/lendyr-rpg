@@ -22,7 +22,7 @@ public class Lwjgl3Launcher {
     configuration.setTitle("Lendyr");
     configuration.useVsync(true);
     configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-    configuration.setWindowedMode(640, 480);
+    configuration.setWindowedMode(1024, 768);
     configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);
     //// You can change these files; they are in lwjgl3/src/main/resources/ .
     //// They can also be loaded from the root of assets/ .

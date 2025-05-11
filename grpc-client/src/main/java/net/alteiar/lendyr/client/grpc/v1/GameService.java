@@ -6,6 +6,8 @@ import io.grpc.ManagedChannel;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.concurrent.TimeUnit;
+
 public class GameService {
 
   private final String serverUrl;
@@ -21,6 +23,9 @@ public class GameService {
 
   public void start() {
     channel = Grpc.newChannelBuilder(serverUrl, InsecureChannelCredentials.create())
+      .keepAliveTime(10, TimeUnit.SECONDS)
+      .keepAliveTimeout(1, TimeUnit.SECONDS)
+      .keepAliveWithoutCalls(true)
       .maxRetryAttempts(3)
       .build();
 
@@ -28,6 +33,14 @@ public class GameService {
   }
 
   public void stop() {
-    channel.shutdown();
+    gameClient.terminate();
+    channel.shutdownNow();
+
+    try {
+      channel.awaitTermination(1, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      System.out.println("Interrupted while waiting for channel to shut down");
+    }
+    System.out.printf("Channel is shut down %s%n", channel.isTerminated());
   }
 }

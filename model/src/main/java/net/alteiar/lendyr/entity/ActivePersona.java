@@ -2,7 +2,7 @@ package net.alteiar.lendyr.entity;
 
 import lombok.Builder;
 import lombok.Data;
-import net.alteiar.lendyr.grpc.model.v1.combat.LendyrCurrentInitiative;
+import net.alteiar.lendyr.grpc.model.v1.encounter.LendyrCurrentInitiative;
 
 @Data
 @Builder

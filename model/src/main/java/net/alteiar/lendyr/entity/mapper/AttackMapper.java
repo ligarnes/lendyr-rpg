@@ -2,8 +2,8 @@ package net.alteiar.lendyr.entity.mapper;
 
 import net.alteiar.lendyr.entity.model.AttackResult;
 import net.alteiar.lendyr.entity.model.SkillResult;
-import net.alteiar.lendyr.grpc.model.v1.combat.LendyrAttackActionResult;
-import net.alteiar.lendyr.grpc.model.v1.combat.LendyrSkillResult;
+import net.alteiar.lendyr.grpc.model.v1.encounter.LendyrAttackActionResult;
+import net.alteiar.lendyr.grpc.model.v1.encounter.LendyrSkillResult;
 
 import java.util.UUID;
 

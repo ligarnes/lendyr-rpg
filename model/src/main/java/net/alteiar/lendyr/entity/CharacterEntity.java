@@ -3,7 +3,8 @@ package net.alteiar.lendyr.entity;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Builder;
 import lombok.Data;
-import net.alteiar.lendyr.grpc.model.v1.character.LendyrPersona;
+import net.alteiar.lendyr.grpc.model.v1.persona.LendyrAttack;
+import net.alteiar.lendyr.grpc.model.v1.persona.LendyrPersona;
 
 import java.util.UUID;
 
@@ -24,13 +25,19 @@ public class CharacterEntity {
   private float height;
   private float speed;
 
+  private LendyrAttack attack;
+
+
   public void update(LendyrPersona persona) {
     this.maxHp = persona.getHealthPoint();
-    this.currentHp = persona.getCurrentHealtPoint();
+    this.currentHp = persona.getCurrentHealthPoint();
     this.position.set(persona.getPosition().getX(), persona.getPosition().getY());
     this.width = persona.getSize().getWidth();
     this.height = persona.getSize().getHeight();
     this.speed = persona.getSpeed();
-    this.defense = persona.getArmorRating();
+    this.defense = persona.getDefense();
+    this.attack = persona.getAttack();
+
+    //persona.getAttack()
   }
 }

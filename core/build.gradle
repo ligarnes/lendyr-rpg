@@ -14,7 +14,13 @@ dependencies {
 
   implementation project(":model")
   implementation project(":grpc-client")
+  implementation project(":shared-ui")
+  implementation project(":encounter")
   implementation "net.alteiar.lendyr:lendyr-grpc-api-v1:${lendyrServerVersion}"
+  implementation "net.alteiar.lendyr:lendyr-service:${lendyrServerVersion}"
+
+  api("org.apache.logging.log4j:log4j-api:${lo4j2Version}")
+  implementation("org.apache.logging.log4j:log4j-core:${lo4j2Version}")
 
   compileOnly("org.projectlombok:lombok:1.18.38")
   annotationProcessor("org.projectlombok:lombok:1.18.38")

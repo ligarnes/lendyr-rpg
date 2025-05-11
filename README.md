@@ -7,6 +7,10 @@ logo.
 
 ## Platforms
 
+- `model`: The internal representation of the models
+- `grpc-client`: The gRPC client to communicate with the backend
+- `shared-ui`: Contains all the UI element, component, view and screen that are shared by the application
+- `encounter`: Contains the screen to manage an encounter.
 - `core`: Main module with the application logic shared by all platforms.
 - `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 
@@ -34,4 +38,24 @@ Note that most tasks that are not specific to a single project can be run with `
 ID of a specific project.
 For example, `core:clean` removes `build` folder only from the `core` project.
 
-#
+# Naming convention
+
+## UI
+
+This section defines the terminology used to name the UI concepts.
+
+### Element
+
+The element is a small flexible building block that can be assembled in components or be used directly in layer.
+
+### Component
+
+The component is a composition of one or more element that represents a feature complete ui entity
+
+### Layer
+
+The layer is a full screen view that allows to draw anything on it
+
+### Screen
+
+The screen is composed of one or multiple views and represents what is currently displayed.
