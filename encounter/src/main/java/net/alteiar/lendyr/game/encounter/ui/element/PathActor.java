@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Pools;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Setter;
-import net.alteiar.lendyr.entity.CharacterEntity;
+import net.alteiar.lendyr.entity.PersonaEntity;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 
@@ -28,11 +28,11 @@ public class PathActor extends Actor {
   private final GlyphLayout glyphLayout;
 
   @Setter
-  private CharacterEntity characterEntity;
+  private PersonaEntity personaEntity;
 
   @Builder
-  public PathActor(@NonNull UiFactory uiFactory, @NonNull BattleMapContext battleMapContext, CharacterEntity characterEntity) {
-    this.characterEntity = characterEntity;
+  public PathActor(@NonNull UiFactory uiFactory, @NonNull BattleMapContext battleMapContext, PersonaEntity personaEntity) {
+    this.personaEntity = personaEntity;
 
     font = uiFactory.getFont();
     textureOk = uiFactory.getTexture("encounter/move-overlay-ok.png");
@@ -51,13 +51,13 @@ public class PathActor extends Actor {
     Vector3 position = Pools.get(Vector3.class).obtain();
     position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
     this.getStage().getCamera().unproject(position);
-    position.x = roundPosition(position.x - characterEntity.getWidth() / 2);
-    position.y = roundPosition(position.y - characterEntity.getHeight() / 2);
+    position.x = roundPosition(position.x - personaEntity.getWidth() / 2);
+    position.y = roundPosition(position.y - personaEntity.getHeight() / 2);
 
-    List<Vector2> path = computePath(characterEntity.getPosition(), Pools.obtain(Vector2.class).set(position.x, position.y));
+    List<Vector2> path = computePath(personaEntity.getPosition(), Pools.obtain(Vector2.class).set(position.x, position.y));
     Pools.free(position);
 
-    float speed = characterEntity.getSpeed() / 2f;
+    float speed = personaEntity.getSpeed() / 2f;
     //float centerY = (characterEntity.getHeight() / 2f) + 0.1f;
 
     //font.getData().setScale(0.015f);
@@ -65,7 +65,7 @@ public class PathActor extends Actor {
     font.getData().setScale(0.02f);
     font.setColor(Color.BLACK);
     for (Vector2 pathPoint : path) {
-      float dist = characterEntity.getPosition().dst(pathPoint);
+      float dist = personaEntity.getPosition().dst(pathPoint);
       String text = dist >= 10 ? String.format("%.0f", dist) : String.format("%.1f", dist);
       glyphLayout.setText(font, text);
       float marginX = (1 - glyphLayout.width) / 2f;

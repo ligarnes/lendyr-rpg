@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.NonNull;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
 import net.alteiar.lendyr.game.encounter.ui.component.OkDialog;
-import net.alteiar.lendyr.ui.shared.ViewLayer;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
+import net.alteiar.lendyr.ui.shared.view.ViewLayer;
 
 public class NotificationDialog extends ViewLayer {
   private final OkDialog dialog;

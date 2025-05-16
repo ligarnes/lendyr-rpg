@@ -78,6 +78,39 @@
         "fixedDamage": 3,
         "damageBonus": "PERCEPTION",
         "penetrating": false
+      },
+      "inventory": {
+        "twoHanded": {
+          "itemType": "WEAPON",
+          "name": "Short bow",
+          "description": "A short bow",
+          "icon": "items/weapons/bows/bow_07_b.png",
+          "weaponGroup": "bows",
+          "damageDice": 1,
+          "damageFixed": 1,
+          "minStr": -1,
+          "cost": 90,
+          "ability": "ACCURACY",
+          "focus": "BOWS",
+          "encumbrance": 1,
+          "attackType": "RANGED"
+        },
+        "backpack": [
+          {
+            "itemType": "WEAPON",
+            "name": "Two-handed axe",
+            "description": "A two-handed axe",
+            "icon": "items/weapons/axes/axe_05_b.png",
+            "weaponGroup": "axes",
+            "damageDice": 3,
+            "damageFixed": 0,
+            "minStr": 3,
+            "cost": 20,
+            "ability": "FIGHTING",
+            "focus": "AXES",
+            "attackType": "MELEE"
+          }
+        ]
       }
     },
     {
@@ -155,6 +188,32 @@
         "fixedDamage": 2,
         "damageBonus": "STRENGTH",
         "penetrating": false
+      },
+      "inventory": {
+        "leftHand": {
+          "itemType": "WEAPON",
+          "name": "Battleaxe",
+          "description": "A battle axe",
+          "icon": "items/weapons/axes/axe_12_b.png",
+          "weaponGroup": "axes",
+          "damageDice": 2,
+          "damageFixed": 0,
+          "minStr": 1,
+          "cost": 14,
+          "ability": "FIGHTING",
+          "focus": "AXES",
+          "attackType": "MELEE"
+        },
+        "backpack": [
+          {
+            "itemType": "OTHER",
+            "name": "Lettre",
+            "description": "Lettre importante",
+            "icon": "icon/TabletopBadges_43.png",
+            "cost": 5,
+            "encumbrance": 1
+          }
+        ]
       }
     },
     {
@@ -232,6 +291,22 @@
         "fixedDamage": 1,
         "damageBonus": "STRENGTH",
         "penetrating": false
+      },
+      "inventory": {
+        "rightHand": {
+          "itemType": "WEAPON",
+          "name": "Battleaxe",
+          "description": "A battle axe",
+          "icon": "items/weapons/axes/axe_12_b.png",
+          "weaponGroup": "axes",
+          "damageDice": 2,
+          "damageFixed": 0,
+          "minStr": 1,
+          "cost": 14,
+          "ability": "FIGHTING",
+          "focus": "AXES",
+          "attackType": "MELEE"
+        }
       }
     }
   ],

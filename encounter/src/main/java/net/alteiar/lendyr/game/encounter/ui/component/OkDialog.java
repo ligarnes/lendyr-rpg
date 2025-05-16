@@ -7,17 +7,17 @@ import com.badlogic.gdx.utils.Align;
 import lombok.Builder;
 import net.alteiar.lendyr.ui.shared.component.TextButtonGroup;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
-import net.alteiar.lendyr.ui.shared.component.Window;
+import net.alteiar.lendyr.ui.shared.component.frame.DecoratedFrame;
 import net.alteiar.lendyr.ui.shared.listener.ButtonClickListener;
 
 public class OkDialog extends Group {
-  private final Window background;
+  private final DecoratedFrame background;
   private final Label text;
   private final TextButtonGroup button;
 
   @Builder
   public OkDialog(UiFactory uiFactory, String errorMessage) {
-    background = uiFactory.createWindow();
+    background = uiFactory.createDecoratedFrame();
     background.setWidth(300);
     background.setHeight(300);
 

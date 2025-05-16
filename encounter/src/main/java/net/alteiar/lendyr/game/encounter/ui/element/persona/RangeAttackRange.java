@@ -7,17 +7,17 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import lombok.Builder;
-import net.alteiar.lendyr.entity.CharacterEntity;
+import net.alteiar.lendyr.entity.PersonaEntity;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 
 public class RangeAttackRange extends Actor {
-  private final CharacterEntity characterEntity;
+  private final PersonaEntity personaEntity;
   private final ShapeRenderer shapeRenderer;
 
   @Builder
-  RangeAttackRange(CharacterEntity characterEntity) {
+  RangeAttackRange(PersonaEntity personaEntity) {
     shapeRenderer = new ShapeRenderer();
-    this.characterEntity = characterEntity;
+    this.personaEntity = personaEntity;
   }
 
   public void dispose() {
@@ -26,10 +26,10 @@ public class RangeAttackRange extends Actor {
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
-    Vector2 position = characterEntity.getPosition();
-    float range = characterEntity.getAttack().getRange();
-    float x = position.x + (characterEntity.getWidth() / 2);
-    float y = position.y + (characterEntity.getHeight() / 2);
+    Vector2 position = personaEntity.getPosition();
+    float range = personaEntity.getAttack().getRange();
+    float x = position.x + (personaEntity.getWidth() / 2);
+    float y = position.y + (personaEntity.getHeight() / 2);
 
     int segments = 200;
 

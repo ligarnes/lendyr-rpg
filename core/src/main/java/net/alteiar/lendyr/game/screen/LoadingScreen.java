@@ -63,6 +63,7 @@ public class LoadingScreen extends ScreenAdapter {
   public void render(float delta) {
     assetManager.update();
     if (assetManager.isFinished() && gameEngine.isLoaded()) {
+      //game.setScreen(UiTestScreen.builder().uiFactory(UiFactory.builder().assetManager(assetManager).build()).build());
       game.setScreen(BattlemapScreen.builder().game(game).assetManager(assetManager).gameEngine(gameEngine).build());
     }
 

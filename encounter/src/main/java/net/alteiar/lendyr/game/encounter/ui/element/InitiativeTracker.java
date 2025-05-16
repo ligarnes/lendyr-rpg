@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import lombok.Builder;
-import net.alteiar.lendyr.entity.CharacterEntity;
+import net.alteiar.lendyr.entity.PersonaEntity;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 
@@ -25,7 +25,7 @@ public class InitiativeTracker extends Group {
 
   @Builder
   InitiativeTracker(UiFactory uiFactory, BattleMapContext battleMapContext) {
-    List<CharacterEntity> characterEntities = battleMapContext.getCombatEntity().getInitiativeOrder();
+    List<PersonaEntity> characterEntities = battleMapContext.getCombatEntity().getInitiativeOrder();
     portaits = new ArrayList<>(characterEntities.size());
 
     for (int i = 0; i < characterEntities.size(); i++) {
@@ -50,14 +50,14 @@ public class InitiativeTracker extends Group {
   private static class InitiativePortrait extends Actor {
     private final Texture portrait;
     private final BattleMapContext battleMapContext;
-    private final CharacterEntity entity;
+    private final PersonaEntity entity;
     private final Texture overlayGreen;
     private final Texture overlayRed;
     private final ShapeRenderer shapeRenderer;
     private final Color color;
     private float healthOverlayHeight;
 
-    public InitiativePortrait(UiFactory uiFactory, CharacterEntity character, BattleMapContext battleMapContext) {
+    public InitiativePortrait(UiFactory uiFactory, PersonaEntity character, BattleMapContext battleMapContext) {
       portrait = uiFactory.getTexture(character.getPortrait());
       this.entity = character;
       this.battleMapContext = battleMapContext;

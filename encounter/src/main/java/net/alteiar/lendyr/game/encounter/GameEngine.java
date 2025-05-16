@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import net.alteiar.lendyr.client.grpc.v1.GameService;
-import net.alteiar.lendyr.entity.CharacterEntity;
 import net.alteiar.lendyr.entity.EncounterEntity;
+import net.alteiar.lendyr.entity.PersonaEntity;
 import net.alteiar.lendyr.entity.model.AttackResult;
 import net.alteiar.lendyr.entity.notification.NotificationMessage;
 import net.alteiar.lendyr.entity.notification.NotificationMessageFactory;
@@ -100,7 +100,7 @@ public class GameEngine {
     return this.encounterEntity.isLoaded();
   }
 
-  public void move(CharacterEntity character, Vector2 newPosition) {
+  public void move(PersonaEntity character, Vector2 newPosition) {
     if (!Objects.equals(encounterEntity.getCurrentCharacter(), character)) {
       throw new IllegalStateException("Character move not allowed; it's not your turn");
     }
@@ -136,7 +136,7 @@ public class GameEngine {
     });
   }
 
-  public void attack(CharacterEntity from, CharacterEntity to) {
+  public void submitAttack(PersonaEntity from, PersonaEntity to) {
     executorService.submit(() -> {
       try {
         AttackResult result = gameService.getGameClient().attack(from.getId(), to.getId());

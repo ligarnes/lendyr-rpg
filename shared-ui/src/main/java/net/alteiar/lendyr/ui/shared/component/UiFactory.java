@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.alteiar.lendyr.ui.shared.component.frame.DecoratedFrame;
+import net.alteiar.lendyr.ui.shared.component.frame.SimpleFrame;
 
 public class UiFactory {
 
@@ -53,12 +55,24 @@ public class UiFactory {
     return TextButtonGroup.builder().uiFactory(this).text(text).build();
   }
 
+  public ActionSelector createActionSelector(ActionSelectorFactory.Icon icon) {
+    return ActionSelectorFactory.create(this, icon);
+  }
+
   public IconButtonActor createIconButton(IconButtonActor.ButtonType type) {
     return IconButtonActor.builder().buttonType(type).assetManager(assetManager).build();
   }
 
-  public Window createWindow() {
-    return Window.builder().assetManager(assetManager).build();
+  public RadioButton createRadioButton() {
+    return RadioButton.builder().uiFactory(this).build();
+  }
+
+  public DecoratedFrame createDecoratedFrame() {
+    return DecoratedFrame.builder().uiFactory(this).build();
+  }
+
+  public SimpleFrame createSimpleFrame() {
+    return SimpleFrame.builder().uiFactory(this).build();
   }
 
   public Texture getTexture(String fileName) {

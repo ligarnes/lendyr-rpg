@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class BattleMapUiState {
   public enum Action {
-    IDLE, MOVE, ATTACK
+    IDLE, MOVE, MELEE_ATTACK, RANGE_ATTACK
   }
 
   private Action currentAction;

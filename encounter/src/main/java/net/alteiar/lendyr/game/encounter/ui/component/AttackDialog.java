@@ -10,7 +10,7 @@ import net.alteiar.lendyr.game.encounter.ui.attack.Defense;
 import net.alteiar.lendyr.game.encounter.ui.attack.SkillResult;
 import net.alteiar.lendyr.game.encounter.ui.attack.WoundResult;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
-import net.alteiar.lendyr.ui.shared.component.Window;
+import net.alteiar.lendyr.ui.shared.component.frame.DecoratedFrame;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ public class AttackDialog extends Group {
   private static final int WIDTH = 400;
   private static final int HEIGHT = 300;
 
-  private final Window background;
+  private final DecoratedFrame background;
   private final SkillResult skillResult;
   private final Defense defense;
   private final WoundResult woundResult;
@@ -28,7 +28,7 @@ public class AttackDialog extends Group {
   @Builder
   AttackDialog(@NonNull UiFactory uiFactory, @NonNull BattleMapContext battleMapContext) {
     this.battleMapContext = battleMapContext;
-    background = uiFactory.createWindow();
+    background = uiFactory.createDecoratedFrame();
     background.setWidth(WIDTH);
     background.setHeight(HEIGHT);
     this.addActor(background);

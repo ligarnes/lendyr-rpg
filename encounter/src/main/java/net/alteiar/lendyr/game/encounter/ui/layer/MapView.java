@@ -3,9 +3,6 @@ package net.alteiar.lendyr.game.encounter.ui.layer;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,14 +10,12 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapUiState;
-import net.alteiar.lendyr.game.encounter.ui.component.FullPersonaToken;
+import net.alteiar.lendyr.game.encounter.ui.component.FullPersonaTokenComponent;
 import net.alteiar.lendyr.game.encounter.ui.element.Map;
 import net.alteiar.lendyr.game.encounter.ui.element.PathActor;
 import net.alteiar.lendyr.game.encounter.ui.element.SquaredGrid;
-import net.alteiar.lendyr.ui.shared.ViewLayer;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
-
-import java.util.Objects;
+import net.alteiar.lendyr.ui.shared.view.ViewLayer;
 
 public class MapView extends ViewLayer {
 
@@ -59,23 +54,8 @@ public class MapView extends ViewLayer {
     stage.addActor(map);
 
     battleMapContext.getCombatEntity().getInitiativeOrder().forEach(state -> {
-      FullPersonaToken character = FullPersonaToken.builder().characterEntity(state).uiFactory(uiFactory).build();
-      character.addListener(new ClickListener() {
-        @Override
-        public void clicked(InputEvent event, float x, float y) {
-          mapListener.onCharacterClick(character);
-        }
-
-        @Override
-        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-          mapListener.onCharacterEnter(character);
-        }
-
-        @Override
-        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-          mapListener.onCharacterExit(character);
-        }
-      });
+      FullPersonaTokenComponent character = FullPersonaTokenComponent.builder().personaEntity(state).uiFactory(uiFactory)
+        .battleMapContext(battleMapContext).build();
       stage.addActor(character);
     });
 
@@ -101,38 +81,42 @@ public class MapView extends ViewLayer {
 
     moveGroup.setVisible(this.battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MOVE);
     if (this.battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MOVE) {
-      moveGroup.setCharacterEntity(this.battleMapContext.getCombatEntity().getCurrentCharacter());
+      moveGroup.setPersonaEntity(this.battleMapContext.getCombatEntity().getCurrentCharacter());
     }
-
-    //rangeAttackRange.setVisible(this.battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.ATTACK);
 
     squaredGrid.setVisible(this.battleMapContext.getUiState().isGridVisible());
   }
 
-  @Override
-  public boolean keyTyped(char c) {
-    if (Objects.equals("a".toCharArray()[0], c)) {
-      if (camera.position.x > -1) {
-        camera.translate(-3, 0, 0);
-      }
-    }
-    if (Objects.equals("d".toCharArray()[0], c)) {
-      if (camera.position.x < battleMapContext.getCombatEntity().getWorldWidth()) {
-        camera.translate(+3, 0, 0);
-      }
-    }
-    if (Objects.equals("w".toCharArray()[0], c)) {
-      if (camera.position.y < battleMapContext.getCombatEntity().getWorldHeight()) {
-        camera.translate(0, 3, 0);
-      }
-    }
-    if (Objects.equals("s".toCharArray()[0], c)) {
-      if (camera.position.y > -1) {
-        camera.translate(0, -3, 0);
-      }
-    }
+  public void zoomIn() {
 
-    return false;
+  }
+
+  public void zoomOut() {
+
+  }
+
+  public void moveLeft() {
+    if (camera.position.x > -1) {
+      camera.translate(-3, 0, 0);
+    }
+  }
+
+  public void moveRight() {
+    if (camera.position.x < battleMapContext.getCombatEntity().getWorldWidth()) {
+      camera.translate(+3, 0, 0);
+    }
+  }
+
+  public void moveTop() {
+    if (camera.position.y < battleMapContext.getCombatEntity().getWorldHeight()) {
+      camera.translate(0, 3, 0);
+    }
+  }
+
+  public void moveBottom() {
+    if (camera.position.y < battleMapContext.getCombatEntity().getWorldHeight()) {
+      camera.translate(0, -3, 0);
+    }
   }
 
   @Override

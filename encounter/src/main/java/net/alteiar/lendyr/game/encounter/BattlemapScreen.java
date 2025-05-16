@@ -1,9 +1,6 @@
 package net.alteiar.lendyr.game.encounter;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -13,9 +10,9 @@ import lombok.NonNull;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapUiState;
 import net.alteiar.lendyr.game.encounter.ui.layer.*;
-import net.alteiar.lendyr.ui.shared.ViewLayer;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 import net.alteiar.lendyr.ui.shared.screen.GameOverScreen;
+import net.alteiar.lendyr.ui.shared.view.ViewLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,18 +45,35 @@ public class BattlemapScreen extends ScreenAdapter {
   public void show() {
     MapView mapView = MapView.builder().battleMapContext(battleMapContext).uiFactory(uiFactory).build();
 
-    ActionMenuAlternate menu = ActionMenuAlternate.builder().uiFactory(uiFactory).battleMapContext(battleMapContext).build();
+    CurrentPersonaMenu menu = CurrentPersonaMenu.builder().uiFactory(uiFactory).battleMapContext(battleMapContext).build();
 
     // BattleMenu menu = BattleMenu.builder().uiFactory(uiFactory).battleMapContext(battleMapContext).build();
     menu.setMenuListener(new MenuListener() {
       @Override
       public void onMoveClick() {
-        battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.MOVE);
+        if (battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MOVE) {
+          battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
+        } else {
+          battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.MOVE);
+        }
       }
 
       @Override
-      public void onAttackClick() {
-        battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.ATTACK);
+      public void onMeleeAttackClick() {
+        if (battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MELEE_ATTACK) {
+          battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
+        } else {
+          battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.MELEE_ATTACK);
+        }
+      }
+
+      @Override
+      public void onRangeAttackClick() {
+        if (battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.RANGE_ATTACK) {
+          battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
+        } else {
+          battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.RANGE_ATTACK);
+        }
       }
 
       @Override
@@ -68,19 +82,48 @@ public class BattlemapScreen extends ScreenAdapter {
       }
     });
 
-    NotificationDialog notificationDialog = NotificationDialog.builder().uiFactory(uiFactory).battleMapContext(battleMapContext).build();
+    //NotificationDialog notificationDialog = NotificationDialog.builder().uiFactory(uiFactory).battleMapContext(battleMapContext).build();
     MapOverlay mapOverlay = MapOverlay.builder().battleMapContext(battleMapContext).uiFactory(uiFactory).build();
 
+    NotificationLayer notificationLayer = NotificationLayer.builder().uiFactory(uiFactory).battleMapContext(battleMapContext).build();
+
     InputMultiplexer multiplexer = new InputMultiplexer();
-    multiplexer.addProcessor(notificationDialog);
+    multiplexer.addProcessor(notificationLayer);
     multiplexer.addProcessor(menu);
     multiplexer.addProcessor(mapView);
+    multiplexer.addProcessor(new InputAdapter() {
+
+      @Override
+      public boolean keyTyped(char character) {
+        if (Objects.equals("a".toCharArray()[0], character)) {
+          mapView.moveLeft();
+          return true;
+        }
+        if (Objects.equals("d".toCharArray()[0], character)) {
+          mapView.moveRight();
+          return true;
+        }
+        if (Objects.equals("w".toCharArray()[0], character)) {
+          mapView.moveTop();
+          return true;
+        }
+        if (Objects.equals("s".toCharArray()[0], character)) {
+          mapView.moveBottom();
+          return true;
+        }
+        if (Objects.equals("i".toCharArray()[0], character)) {
+          notificationLayer.showHideInventory();
+          return true;
+        }
+        return false;
+      }
+    });
     Gdx.input.setInputProcessor(multiplexer);
 
     views.add(mapView);
     views.add(mapOverlay);
     views.add(menu);
-    views.add(notificationDialog);
+    views.add(notificationLayer);
 
     walkCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("encounter/cursor/walk.png")), 16, 16);
     attackCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("encounter/cursor/attack.png")), 16, 16);
@@ -110,7 +153,7 @@ public class BattlemapScreen extends ScreenAdapter {
     if (!Objects.equals(currentAction, battleMapContext.getUiState().getCurrentAction())) {
       currentAction = battleMapContext.getUiState().getCurrentAction();
       switch (currentAction) {
-        case ATTACK -> Gdx.graphics.setCursor(attackCursor);
+        case MELEE_ATTACK -> Gdx.graphics.setCursor(attackCursor);
         case MOVE -> Gdx.graphics.setCursor(walkCursor);
         default -> Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
       }

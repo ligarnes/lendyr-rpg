@@ -29,9 +29,9 @@ public class EncounterEntity {
   private int currentTurn;
   private final ActivePersona activePersona;
   private final List<UUID> initiativeOrder;
-  private final Map<UUID, CharacterEntity> characterEntities;
+  private final Map<UUID, PersonaEntity> characterEntities;
 
-  private final List<CharacterEntity> cachedInitiativeOrder;
+  private final List<PersonaEntity> cachedInitiativeOrder;
 
   @Builder
   EncounterEntity() {
@@ -50,18 +50,26 @@ public class EncounterEntity {
     return this.heightInPixel / this.pixelPerMeter;
   }
 
-  public CharacterEntity getCharacter(UUID id) {
+  public boolean isMajorActionUsed() {
+    return activePersona.isMajorActionUsed();
+  }
+
+  public boolean isMinorActionUsed() {
+    return activePersona.isMinorActionUsed();
+  }
+
+  public PersonaEntity getCharacter(UUID id) {
     return characterEntities.get(id);
   }
 
-  public CharacterEntity getCurrentCharacter() {
+  public PersonaEntity getCurrentCharacter() {
     if (activePersona.getIdx() >= characterEntities.size()) {
       throw new IllegalStateException("No current character found");
     }
     return cachedInitiativeOrder.get(activePersona.getIdx());
   }
 
-  public List<CharacterEntity> getInitiativeOrder() {
+  public List<PersonaEntity> getInitiativeOrder() {
     return cachedInitiativeOrder;
   }
 
@@ -98,7 +106,7 @@ public class EncounterEntity {
       UUID personaId = GenericMapper.INSTANCE.convertBytesToUUID(persona.getId());
       this.characterEntities.compute(personaId, (k, entity) -> {
         if (entity == null) {
-          entity = CharacterEntity.builder()
+          entity = PersonaEntity.builder()
             .id(personaId)
             .name(persona.getName())
             .portrait(persona.getPortraitPath())
