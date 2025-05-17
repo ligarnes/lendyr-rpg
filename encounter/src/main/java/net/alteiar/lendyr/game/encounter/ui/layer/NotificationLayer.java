@@ -5,10 +5,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import lombok.Builder;
 import lombok.NonNull;
+import net.alteiar.lendyr.entity.ItemEntity;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
 import net.alteiar.lendyr.game.encounter.ui.component.AttackDialog;
 import net.alteiar.lendyr.game.encounter.ui.component.OkDialog;
-import net.alteiar.lendyr.ui.shared.component.PersonaEquipmentDialog;
+import net.alteiar.lendyr.ui.inventory.ItemDetailsDialog;
+import net.alteiar.lendyr.ui.inventory.PersonaEquipmentDialog;
+import net.alteiar.lendyr.ui.inventory.component.ItemSlot;
+import net.alteiar.lendyr.ui.inventory.listener.ItemSlotListener;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 import net.alteiar.lendyr.ui.shared.view.ViewLayer;
 
@@ -17,6 +21,8 @@ public class NotificationLayer extends ViewLayer {
   private final OkDialog notificationDialog;
   private final AttackDialog attackDialog;
   private final PersonaEquipmentDialog inventoryDialog;
+
+  private final ItemDetailsDialog itemDetailsDialog;
 
   private final BattleMapContext battleMapContext;
 
@@ -37,10 +43,22 @@ public class NotificationLayer extends ViewLayer {
 
     inventoryDialog = PersonaEquipmentDialog.builder().uiFactory(uiFactory).build();
     inventoryDialog.setPosition(centerX(inventoryDialog), centerY(inventoryDialog));
+    inventoryDialog.setItemSlotListener(new ItemSlotListener() {
+      @Override
+      public void onItemSlotRightClick(ItemSlot itemSlot) {
+        if (!itemSlot.isEmpty()) {
+          itemDetailsDialog.setItem(itemSlot.getItemEntity());
+          itemDetailsDialog.setVisible(true);
+        }
+      }
+    });
+
+    itemDetailsDialog = ItemDetailsDialog.builder().uiFactory(uiFactory).build();
 
     stage.addActor(attackDialog);
     stage.addActor(inventoryDialog);
     stage.addActor(notificationDialog);
+    stage.addActor(itemDetailsDialog);
   }
 
   public void showHideInventory() {
@@ -55,7 +73,16 @@ public class NotificationLayer extends ViewLayer {
         notificationDialog.setVisible(true);
       });
 
-    inventoryDialog.setPersona(battleMapContext.getCombatEntity().getCurrentCharacter());
+    if (inventoryDialog.isVisible()) {
+      inventoryDialog.setPersona(battleMapContext.getCombatEntity().getCurrentCharacter());
+    }
+
+    if (itemDetailsDialog.isVisible()) {
+      ItemEntity entity = battleMapContext.getCombatEntity().getCurrentCharacter().getInventory().getLeftHand();
+      if (!entity.isEmpty()) {
+        itemDetailsDialog.setItem(entity);
+      }
+    }
 
     super.act(delta);
   }

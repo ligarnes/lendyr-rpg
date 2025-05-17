@@ -32,8 +32,7 @@ public class Dialog<E extends Actor> extends Group {
       }
     });
 
-    dialogTitle = uiFactory.createLabel(Color.WHITE);
-    dialogTitle.setFontScale(0.5f);
+    dialogTitle = uiFactory.createLabel(uiFactory.getFont16(), Color.WHITE);
 
     table = new Table();
     table.setFillParent(true);
@@ -43,7 +42,7 @@ public class Dialog<E extends Actor> extends Group {
     table.add(closeButton).right();
 
     topFrame = SimpleFrame.builder().uiFactory(uiFactory).backgroundTexture("fantasy-gui/bg.png").build();
-    topFrame.setHeight(28);
+    topFrame.setHeight(33);
     topFrame.setBorderThickness(2);
     topFrame.addActor(table);
 
@@ -56,6 +55,7 @@ public class Dialog<E extends Actor> extends Group {
 
     frame = SimpleFrame.builder().uiFactory(uiFactory).build();
     frame.setBorderThickness(2);
+
     this.addActor(frame);
     this.addActor(topFrame);
   }
@@ -68,13 +68,11 @@ public class Dialog<E extends Actor> extends Group {
     this.content = content;
     // Add it to the middle
     this.addActorAt(1, this.content);
-
     frame.setSize(content.getWidth() + frame.getBorderThickness() * 2, content.getHeight() + frame.getBorderThickness() * 2);
 
-    topFrame.setPosition(0, frame.getHeight() - 24f);
-    topFrame.setWidth(frame.getWidth());
-
     table.invalidate();
+    topFrame.setWidth(frame.getWidth());
+    topFrame.setPosition(0, frame.getHeight());
 
     this.setSize(frame.getWidth(), frame.getHeight() + topFrame.getHeight());
     this.setPosition(Gdx.graphics.getWidth() / 2f - getWidth() / 2f, Gdx.graphics.getHeight() / 2f - getHeight() / 2f);

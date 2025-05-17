@@ -1,9 +1,7 @@
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-eclipse.project.name = appName + '-encounter'
+eclipse.project.name = appName + '-inventory-ui'
 
 dependencies {
-  api "com.badlogicgames.ashley:ashley:$ashleyVersion"
-  api "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
   api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -13,11 +11,7 @@ dependencies {
   }
 
   implementation project(":model")
-  implementation project(":grpc-client")
   implementation project(":shared-ui")
-  implementation project(":inventory-ui")
-  
-  implementation "net.alteiar.lendyr:lendyr-grpc-api-v1:${lendyrServerVersion}"
 
   compileOnly("org.projectlombok:lombok:1.18.38")
   annotationProcessor("org.projectlombok:lombok:1.18.38")

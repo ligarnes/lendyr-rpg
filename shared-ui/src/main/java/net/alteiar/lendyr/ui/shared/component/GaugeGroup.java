@@ -24,8 +24,7 @@ public class GaugeGroup extends Group {
     gauge = GaugeActor.builder().uiFactory(uiFactory).ratio(1 - current / max).color(gaugeColor)
       .innerTexture(innerTexture).build();
 
-    gaugeLabel = uiFactory.createLabel("Text", textColor);
-    gaugeLabel.setFontScale(0.7f);
+    gaugeLabel = uiFactory.createLabel("Text", uiFactory.getFont24(), textColor);
     gaugeLabel.setAlignment(Align.center);
 
     this.addActor(gauge);

@@ -1,5 +1,6 @@
 package net.alteiar.lendyr.ui.shared.component;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -12,6 +13,7 @@ import lombok.Setter;
 import net.alteiar.lendyr.ui.shared.listener.ButtonClickListener;
 
 public class ActionSelector extends Actor {
+  private final Color previousColor;
   private final Texture background;
 
   // Inner icon
@@ -31,10 +33,13 @@ public class ActionSelector extends Actor {
   private float overlaySelectedHeight;
   private final Vector2 overlaySelectedPosition;
 
-
   @Getter
   @Setter
   private boolean selected;
+
+  @Getter
+  @Setter
+  private boolean disabled;
 
   @Builder
   public ActionSelector(UiFactory uiFactory, String icon) {
@@ -49,6 +54,7 @@ public class ActionSelector extends Actor {
     this.setWidth(45);
     this.setHeight(45);
 
+    previousColor = new Color();
     recomputeIconPosition();
     recomputeOverlayPosition();
   }
@@ -57,22 +63,29 @@ public class ActionSelector extends Actor {
     this.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
-        actionSelectorClicked.buttonClicked();
-        event.stop();
+        if (!isDisabled()) {
+          actionSelectorClicked.buttonClicked();
+          event.stop();
+        }
       }
     });
   }
 
   @Override
   public void draw(Batch batch, float parentAlpha) {
+    previousColor.set(batch.getColor());
+    if (disabled) {
+      batch.setColor(UiFactory.DARK_GRAY_OVERLAY_COLOR);
+    }
+
     batch.draw(background, getX(), getY(), getWidth(), getHeight());
     if (selected) {
       batch.draw(overlaySelected, overlaySelectedPosition.x, overlaySelectedPosition.y, overlaySelectedWidth, overlaySelectedHeight);
     } else {
       batch.draw(overlayNormal, getX(), getY(), overlayNormalWidth, overlayNormalHeight);
     }
-
     batch.draw(icon, iconPosition.x, iconPosition.y, iconWidth, iconHeight);
+    batch.setColor(previousColor);
   }
 
   @Override

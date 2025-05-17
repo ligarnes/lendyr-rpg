@@ -1,12 +1,12 @@
-package net.alteiar.lendyr.ui.shared.component.inventory;
+package net.alteiar.lendyr.ui.inventory.component;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import net.alteiar.lendyr.entity.ItemEntity;
+import net.alteiar.lendyr.ui.inventory.listener.ItemSlotListener;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 import net.alteiar.lendyr.ui.shared.component.frame.SimpleFrame;
-import net.alteiar.lendyr.ui.shared.element.inventory.ItemSlot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +53,13 @@ public class ItemList extends Group {
 
     this.addActor(simpleFrame);
 
-    this.setWidth(frameWidth);
-    this.setHeight(frameHeight);
+    this.setSize(frameWidth, frameHeight);
+  }
+
+  public void setItemSlotListener(ItemSlotListener itemSlotListener) {
+    itemSlot.forEach(itemSlot -> {
+      itemSlot.setItemSlotListener(itemSlotListener);
+    });
   }
 
   public void addItem(ItemEntity itemEntity) {

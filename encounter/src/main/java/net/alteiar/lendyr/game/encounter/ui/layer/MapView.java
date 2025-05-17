@@ -3,6 +3,8 @@ package net.alteiar.lendyr.game.encounter.ui.layer;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import lombok.Builder;
 import lombok.Getter;
@@ -67,6 +69,30 @@ public class MapView extends ViewLayer {
     squaredGrid = new SquaredGrid(battleMapContext);
     squaredGrid.setVisible(false);
     stage.addActor(squaredGrid);
+
+    stage.addListener(new ClickListener(Input.Buttons.LEFT) {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        point3d.set(x, y, 0);
+        mapListener.onMapClick(point3d);
+      }
+
+      @Override
+      public boolean keyDown(InputEvent event, int keycode) {
+        if (Input.Keys.ESCAPE == keycode) {
+          battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
+          return true;
+        }
+
+        return false;
+      }
+
+      @Override
+      public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
+        zoom(amountY);
+        return false;
+      }
+    });
   }
 
   @Override
@@ -87,12 +113,13 @@ public class MapView extends ViewLayer {
     squaredGrid.setVisible(this.battleMapContext.getUiState().isGridVisible());
   }
 
-  public void zoomIn() {
+  public void zoom(float amount) {
+    float newZoom = camera.zoom + (amount * 0.2f);
+    float boundedZoom = Math.max(Math.min(newZoom, 4), 0.1f);
 
-  }
-
-  public void zoomOut() {
-
+    if (boundedZoom != camera.zoom) {
+      camera.zoom = boundedZoom;
+    }
   }
 
   public void moveLeft() {
@@ -117,41 +144,5 @@ public class MapView extends ViewLayer {
     if (camera.position.y < battleMapContext.getCombatEntity().getWorldHeight()) {
       camera.translate(0, -3, 0);
     }
-  }
-
-  @Override
-  public boolean keyDown(int keycode) {
-    if (Input.Keys.ESCAPE == keycode) {
-      battleMapContext.getUiState().setCurrentAction(BattleMapUiState.Action.IDLE);
-      return true;
-    }
-
-    return stage.keyDown(keycode);
-  }
-
-  @Override
-  public boolean scrolled(float direction, float amount) {
-    float newZoom = camera.zoom + (amount * 0.2f);
-    float boundedZoom = Math.max(Math.min(newZoom, 4), 0.1f);
-
-    if (boundedZoom != camera.zoom) {
-      camera.zoom = boundedZoom;
-    }
-
-    return true;
-  }
-
-  @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    boolean isClicked = super.touchDown(screenX, screenY, pointer, button);
-    if (isClicked) {
-      return true;
-    }
-
-    // ignore if its not left mouse button or first touch pointer
-    if (button != Input.Buttons.LEFT || pointer > 0) return false;
-
-    Vector3 newPosition = camera.unproject(point3d.set(screenX, screenY, 0));
-    return mapListener.onMapClick(newPosition);
   }
 }

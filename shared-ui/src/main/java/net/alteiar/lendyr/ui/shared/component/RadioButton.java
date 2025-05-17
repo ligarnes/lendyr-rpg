@@ -19,14 +19,45 @@ public class RadioButton extends Actor {
   @Setter
   private boolean selected;
 
+  // Computed
+  private float backgroundWidth;
+  private float backgroundHeight;
+  private float backgroundX;
+  private float backgroundY;
+
+  private float selectWidth;
+  private float selectedHeight;
+  private float selectedX;
+  private float selectedY;
+
+  private float frameWidth;
+  private float frameHeight;
+
   @Builder
   public RadioButton(UiFactory uiFactory) {
     background = uiFactory.getTexture("fantasy-gui/button_06_bg.png");
     frame = uiFactory.getTexture("fantasy-gui/button_06_frame.png");
     selectedTexture = uiFactory.getTexture("fantasy-gui/button_06.png");
 
-    this.setWidth(24);
-    this.setHeight(24);
+    //this.setSize(64, 64);
+    this.setSize(18, 18);
+  }
+
+  @Override
+  protected void positionChanged() {
+    recompute();
+  }
+
+  @Override
+  protected void sizeChanged() {
+    float scale = getWidth() / frame.getWidth();
+    this.setScale(scale);
+    recompute();
+  }
+
+  @Override
+  protected void scaleChanged() {
+    this.setSize(frame.getWidth() * getScaleX(), frame.getHeight() * getScaleY());
   }
 
   public void addClickListener(ButtonClickListener actionSelectorClicked) {
@@ -39,12 +70,27 @@ public class RadioButton extends Actor {
     });
   }
 
+  private void recompute() {
+    backgroundWidth = background.getWidth() * getScaleX();
+    backgroundHeight = background.getHeight() * getScaleY();
+    backgroundX = getX() + getWidth() / 2f - backgroundWidth / 2f;
+    backgroundY = getY() + getHeight() / 2f - backgroundHeight / 2f;
+
+    selectWidth = selectedTexture.getWidth() * getScaleX();
+    selectedHeight = selectedTexture.getHeight() * getScaleY();
+    selectedX = getX() + getWidth() / 2f - selectWidth / 2f;
+    selectedY = getY() + getHeight() / 2f - selectedHeight / 2f;
+
+    frameWidth = frame.getWidth() * getScaleX();
+    frameHeight = frame.getHeight() * getScaleY();
+  }
+
   @Override
   public void draw(Batch batch, float parentAlpha) {
-    batch.draw(background, getX(), getY(), getWidth(), getHeight());
+    batch.draw(background, backgroundX, backgroundY, backgroundWidth, backgroundHeight);
     if (selected) {
-      batch.draw(selectedTexture, getX(), getY(), getWidth(), getHeight());
+      batch.draw(selectedTexture, selectedX, selectedY, selectWidth, selectedHeight);
     }
-    batch.draw(frame, getX(), getY(), getWidth(), getHeight());
+    batch.draw(frame, getX(), getY(), frameWidth, frameHeight);
   }
 }

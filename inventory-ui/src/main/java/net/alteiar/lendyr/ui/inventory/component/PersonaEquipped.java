@@ -1,4 +1,4 @@
-package net.alteiar.lendyr.ui.shared.component.inventory;
+package net.alteiar.lendyr.ui.inventory.component;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -6,20 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.utils.Align;
 import lombok.Builder;
 import lombok.Setter;
-import net.alteiar.lendyr.entity.PersonaEntity;
 import net.alteiar.lendyr.entity.PersonaInventoryEntity;
+import net.alteiar.lendyr.ui.inventory.listener.ItemSlotListener;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 import net.alteiar.lendyr.ui.shared.component.frame.SimpleFrame;
-import net.alteiar.lendyr.ui.shared.element.SmallTitle;
-import net.alteiar.lendyr.ui.shared.element.inventory.ItemSlot;
 
-import java.util.Objects;
-
-public class PersonaEquipment extends Group {
-
+public class PersonaEquipped extends Group {
   // Left items
   private final ItemSlot leftHand;
   private final ItemSlot gloves;
@@ -32,13 +26,11 @@ public class PersonaEquipment extends Group {
   private final ItemSlot neckless;
   private final ItemSlot ring1;
 
-  private final ItemList itemList;
-
   @Setter
-  private PersonaEntity persona;
+  private PersonaInventoryEntity personaInventoryEntity;
 
   @Builder
-  PersonaEquipment(UiFactory uiFactory) {
+  PersonaEquipped(UiFactory uiFactory) {
     // left menu
     leftHand = ItemSlot.builder().uiFactory(uiFactory).build();
     gloves = ItemSlot.builder().uiFactory(uiFactory).build();
@@ -76,34 +68,33 @@ public class PersonaEquipment extends Group {
     personaBackground.addActor(personaFullIllustration);
     personaBackground.setSize(illustrationWidth + personaBackground.getBorderThickness() * 2, illustrationHeight + personaBackground.getBorderThickness() * 2);
 
-    itemList = new ItemList(uiFactory);
-
-    VerticalGroup backpack = new VerticalGroup();
-    backpack.align(Align.center);
-    backpack.space(10);
-    backpack.addActor(SmallTitle.builder().uiFactory(uiFactory).title("Backpack").build());
-    backpack.addActor(itemList);
-
     Table table = new Table();
     table.setFillParent(true);
     table.add(verticalGroupLeft).spaceRight(10);
     table.add(personaBackground).spaceRight(10);
-    table.add(verticalGroupRight).spaceRight(30);
-    table.add(backpack);
+    table.add(verticalGroupRight);
+
+    float width = illustrationWidth + 40 + rightHand.getWidth() * 2;
 
     this.addActor(table);
-    this.setWidth(790);
-    this.setHeight(360);
+    this.setSize(width, 360);
+  }
+
+  public void setItemSlotListener(ItemSlotListener itemSlotListener) {
+    leftHand.setItemSlotListener(itemSlotListener);
+    gloves.setItemSlotListener(itemSlotListener);
+    armor.setItemSlotListener(itemSlotListener);
+    boot.setItemSlotListener(itemSlotListener);
+
+    rightHand.setItemSlotListener(itemSlotListener);
+    belt.setItemSlotListener(itemSlotListener);
+    neckless.setItemSlotListener(itemSlotListener);
+    ring1.setItemSlotListener(itemSlotListener);
   }
 
   @Override
   public void act(float delta) {
-    super.act(delta);
-
-    itemList.setItems(persona.getInventory().getBackpack());
-
-    if (Objects.nonNull(this.persona)) {
-      PersonaInventoryEntity personaInventoryEntity = persona.getInventory();
+    if (personaInventoryEntity != null) {
       if (!personaInventoryEntity.getTwoHanded().isEmpty()) {
         this.leftHand.setItemEntity(personaInventoryEntity.getTwoHanded());
         this.rightHand.setItemEntity(personaInventoryEntity.getTwoHanded());
@@ -111,6 +102,7 @@ public class PersonaEquipment extends Group {
         this.leftHand.setItemEntity(personaInventoryEntity.getLeftHand());
         this.rightHand.setItemEntity(personaInventoryEntity.getRightHand());
       }
+      super.act(delta);
     }
   }
 

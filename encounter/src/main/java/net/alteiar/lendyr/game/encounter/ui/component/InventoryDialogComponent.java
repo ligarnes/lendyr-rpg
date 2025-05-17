@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import lombok.Builder;
 import lombok.NonNull;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
+import net.alteiar.lendyr.ui.inventory.component.ItemList;
 import net.alteiar.lendyr.ui.shared.component.UiFactory;
 import net.alteiar.lendyr.ui.shared.component.frame.DecoratedFrame;
-import net.alteiar.lendyr.ui.shared.component.inventory.ItemList;
 
 public class InventoryDialogComponent extends Group {
   private static final int WIDTH = 400;

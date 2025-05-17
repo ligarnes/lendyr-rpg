@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -14,9 +14,13 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.alteiar.lendyr.entity.PersonaEntity;
 import net.alteiar.lendyr.game.encounter.controller.BattleMapContext;
+import net.alteiar.lendyr.game.encounter.controller.BattleMapUiState;
+import net.alteiar.lendyr.grpc.model.v1.persona.AttackType;
 import net.alteiar.lendyr.ui.shared.component.*;
 import net.alteiar.lendyr.ui.shared.component.frame.DecoratedFrame;
 import net.alteiar.lendyr.ui.shared.element.LargeTitle;
+import net.alteiar.lendyr.ui.shared.element.SmallTitle;
+import net.alteiar.lendyr.ui.shared.element.button.TextButtonLarge;
 import net.alteiar.lendyr.ui.shared.view.ViewLayer;
 
 public class CurrentPersonaMenu extends ViewLayer {
@@ -24,8 +28,8 @@ public class CurrentPersonaMenu extends ViewLayer {
   private final Table layout;
   private final DecoratedFrame frame;
 
-  private final RadioButton majorAction;
-  private final RadioButton minorAction;
+  private final ActionTitle majorActionTitle;
+  private final ActionTitle minorActionTitle;
 
   private final ActionSelector attackMeleeSelector;
   private final ActionSelector attackRangeSelector;
@@ -51,11 +55,8 @@ public class CurrentPersonaMenu extends ViewLayer {
       .textColor(Color.BLACK)
       .build();
 
-    Label majorActionsTitle = uiFactory.createLabel("Major actions");
-    Label minorActionsTitle = uiFactory.createLabel("Minor actions");
-
-    majorAction = uiFactory.createRadioButton();
-    minorAction = uiFactory.createRadioButton();
+    majorActionTitle = ActionTitle.builder().uiFactory(uiFactory).title("Major actions").build();
+    minorActionTitle = ActionTitle.builder().uiFactory(uiFactory).title("Minor actions").build();
 
     attackMeleeSelector = uiFactory.createActionSelector(ActionSelectorFactory.Icon.MELEE_ATTACK);
     attackMeleeSelector.addClickListener(() -> menuListener.onMeleeAttackClick());
@@ -65,7 +66,8 @@ public class CurrentPersonaMenu extends ViewLayer {
     walkSelector = uiFactory.createActionSelector(ActionSelectorFactory.Icon.MOVE);
     walkSelector.addClickListener(() -> menuListener.onMoveClick());
 
-    TextButtonGroup endTurn = uiFactory.createTextButton("End Turn");
+    TextButtonLarge endTurn = TextButtonLarge.builder().uiFactory(uiFactory).text("End Turn").build();
+    endTurn.setSize(200, 60);
 
     endTurn.addListener(new ClickListener() {
       @Override
@@ -75,20 +77,10 @@ public class CurrentPersonaMenu extends ViewLayer {
       }
     });
 
-    HorizontalGroup majorActionTitleRow = new HorizontalGroup();
-    majorActionTitleRow.space(10);
-    majorActionTitleRow.addActor(majorActionsTitle);
-    majorActionTitleRow.addActor(majorAction);
-
     HorizontalGroup majorActionRow = new HorizontalGroup();
     majorActionRow.space(5);
     majorActionRow.addActor(attackMeleeSelector);
     majorActionRow.addActor(attackRangeSelector);
-
-    HorizontalGroup minorActionTitleRow = new HorizontalGroup();
-    minorActionTitleRow.space(10);
-    minorActionTitleRow.addActor(minorActionsTitle);
-    minorActionTitleRow.addActor(minorAction);
 
     HorizontalGroup minorActionRow = new HorizontalGroup();
     minorActionRow.addActor(walkSelector);
@@ -103,11 +95,11 @@ public class CurrentPersonaMenu extends ViewLayer {
     layout.row();
     layout.add(healthGauge).space(10);
     layout.row();
-    layout.add(majorActionTitleRow).space(5);
+    layout.add(majorActionTitle).center().space(5);
     layout.row();
     layout.add(majorActionRow).spaceBottom(10);
     layout.row();
-    layout.add(minorActionTitleRow).space(5);
+    layout.add(minorActionTitle).center().space(5);
     layout.row();
     layout.add(minorActionRow).spaceBottom(10);
     layout.row();
@@ -128,18 +120,25 @@ public class CurrentPersonaMenu extends ViewLayer {
     healthGauge.setMax(currentCharacter.getMaxHp());
     healthGauge.setInnerTexture(currentCharacter.getToken());
 
-    attackMeleeSelector.setSelected(false);
-    attackRangeSelector.setSelected(false);
-    walkSelector.setSelected(false);
+    // Major actions
+    boolean isMeleeDisabled = battleMapContext.getCombatEntity().isMajorActionUsed() || currentCharacter.getAttack().getAttackType() != AttackType.MELEE;
+    boolean isMeleeSelected = battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MELEE_ATTACK && !isMeleeDisabled;
+    attackMeleeSelector.setSelected(isMeleeSelected);
+    attackMeleeSelector.setDisabled(isMeleeDisabled);
 
-    switch (battleMapContext.getUiState().getCurrentAction()) {
-      case MELEE_ATTACK -> attackMeleeSelector.setSelected(true);
-      case RANGE_ATTACK -> attackRangeSelector.setSelected(true);
-      case MOVE -> walkSelector.setSelected(true);
-    }
+    boolean isRangeDisabled = battleMapContext.getCombatEntity().isMajorActionUsed() || currentCharacter.getAttack().getAttackType() != AttackType.RANGE;
+    boolean isRangeSelected = battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.RANGE_ATTACK && !isRangeDisabled;
+    attackRangeSelector.setSelected(isRangeSelected);
+    attackRangeSelector.setDisabled(isRangeDisabled);
 
-    majorAction.setSelected(!battleMapContext.getCombatEntity().isMajorActionUsed());
-    minorAction.setSelected(!battleMapContext.getCombatEntity().isMinorActionUsed());
+    // Minor actions
+    boolean isMoveDisabled = battleMapContext.getCombatEntity().isMinorActionUsed();
+    boolean isMoveSelected = battleMapContext.getUiState().getCurrentAction() == BattleMapUiState.Action.MOVE && !isMoveDisabled;
+    walkSelector.setSelected(isMoveSelected);
+    walkSelector.setDisabled(isMoveDisabled);
+
+    majorActionTitle.setSelected(!battleMapContext.getCombatEntity().isMajorActionUsed());
+    minorActionTitle.setSelected(!battleMapContext.getCombatEntity().isMinorActionUsed());
 
     stage.act(delta);
   }
@@ -148,5 +147,42 @@ public class CurrentPersonaMenu extends ViewLayer {
     super.resize(width, height);
     layout.setHeight(height);
     frame.setHeight(height);
+  }
+
+  private static class ActionTitle extends WidgetGroup {
+    private final RadioButton actived;
+
+    @Builder
+    ActionTitle(UiFactory uiFactory, String title) {
+      SmallTitle titleLabel = SmallTitle.builder().uiFactory(uiFactory).title(title).build();
+      actived = uiFactory.createRadioButton();
+      actived.setPosition(titleLabel.getWidth() - 50, titleLabel.getHeight() / 2f - actived.getHeight() / 2f);
+
+      this.addActor(titleLabel);
+      this.addActor(actived);
+
+      this.setWidth(titleLabel.getWidth());
+      this.setHeight(titleLabel.getHeight());
+    }
+
+    public float getPrefWidth() {
+      return getWidth();
+    }
+
+    public float getPrefHeight() {
+      return getHeight();
+    }
+
+    public float getMaxWidth() {
+      return getWidth();
+    }
+
+    public float getMaxHeight() {
+      return getHeight();
+    }
+
+    public void setSelected(boolean isSelected) {
+      this.actived.setSelected(isSelected);
+    }
   }
 }

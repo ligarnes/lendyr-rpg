@@ -23,18 +23,14 @@ public class SmallTitle extends Group {
     background.setWidth(scale * background.getWidth());
     background.setHeight(scale * background.getHeight());
 
-    nameLabel = uiFactory.createLabel(title);
+    nameLabel = uiFactory.createLabel(title, uiFactory.getFont18(), Color.BLACK);
     nameLabel.setColor(Color.BLACK);
+    nameLabel.setAlignment(Align.center);
 
     GlyphLayout layout = nameLabel.getGlyphLayout();
     layout.setText(nameLabel.getStyle().font, "some text");
-    float x = 0f;
-    float y = background.getHeight() - (layout.height + 3);
-    nameLabel.setPosition(x, y);
-    nameLabel.setWidth(background.getWidth());
-    nameLabel.setHeight(layout.height);
-    nameLabel.setAlignment(Align.center);
-    nameLabel.setFontScale(0.8f);
+    nameLabel.setPosition(0f, 0f);
+    nameLabel.setSize(background.getWidth(), background.getHeight());
 
     this.addActor(background);
     this.addActor(nameLabel);

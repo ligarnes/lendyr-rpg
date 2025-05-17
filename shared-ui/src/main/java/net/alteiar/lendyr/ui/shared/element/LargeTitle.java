@@ -13,7 +13,7 @@ import net.alteiar.lendyr.ui.shared.component.UiFactory;
 
 public class LargeTitle extends Group {
 
-  private final Label nameLabel;//text_bg_01.png
+  private final Label nameLabel;
 
   @Builder
   public LargeTitle(UiFactory uiFactory, String title) {
@@ -23,18 +23,15 @@ public class LargeTitle extends Group {
     background.setWidth(scale * background.getWidth());
     background.setHeight(scale * background.getHeight());
 
-    nameLabel = uiFactory.createLabel(title);
-    nameLabel.setColor(Color.BLACK);
+    nameLabel = uiFactory.createLabel(title, uiFactory.getFont28(), Color.BLACK);
+    nameLabel.setAlignment(Align.center, Align.center);
 
     GlyphLayout layout = nameLabel.getGlyphLayout();
     layout.setText(nameLabel.getStyle().font, "some text");
     float x = 0f;
-    float y = background.getHeight() - (layout.height + 3);
+    float y = background.getHeight() - (layout.height + 5);
     nameLabel.setPosition(x, y);
-    nameLabel.setWidth(background.getWidth());
-    nameLabel.setHeight(layout.height);
-    nameLabel.setAlignment(Align.center);
-    nameLabel.setFontScale(0.8f);
+    nameLabel.setSize(background.getWidth(), layout.height);
 
     this.addActor(background);
     this.addActor(nameLabel);
